@@ -16,7 +16,10 @@ jobs:
         with:
           node-version: 12
       - run: npm ci
+      - name: install packeages
+        run: npm install webpack webpack-cli typescript ts-loader
       - run: npm test
+      - run: npx webpack
 
   publish-npm:
     needs: build
@@ -28,9 +31,12 @@ jobs:
           node-version: 12
           registry-url: https://registry.npmjs.org/
       - run: npm ci
+      - name: install packeages
+        run: npm install webpack webpack-cli typescript ts-loader
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.npm_token}}
+      - run: npx webpack
 
   publish-gpr:
     needs: build
@@ -42,6 +48,9 @@ jobs:
           node-version: 12
           registry-url: https://npm.pkg.github.com/
       - run: npm ci
+      - name: install packeages
+        run: npm install webpack webpack-cli typescript ts-loader
       - run: npm publish
         env:
           NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+      - run: npx webpack
