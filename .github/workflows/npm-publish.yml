@@ -20,37 +20,8 @@ jobs:
         run: npm install webpack webpack-cli typescript ts-loader
       - run: npm test
       - run: npx webpack
-
-  publish-npm:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
+      - name: deploy
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          node-version: 12
-          registry-url: https://registry.npmjs.org/
-      - run: npm ci
-      - name: install packeages
-        run: npm install webpack webpack-cli typescript ts-loader
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.npm_token}}
-      - run: npx webpack
-
-  publish-gpr:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 12
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - name: install packeages
-        run: npm install webpack webpack-cli typescript ts-loader
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
-      - run: npx webpack
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./
