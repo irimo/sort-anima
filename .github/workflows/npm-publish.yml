@@ -15,13 +15,6 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: npm ci
       - name: install packeages
         run: npm install webpack webpack-cli typescript ts-loader
-      - run: npm test
       - run: npx webpack
-      - name: deploy
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./
