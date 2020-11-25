@@ -1,5 +1,7 @@
 export class SortAnima {
     canvas = <HTMLCanvasElement>document.getElementById('canvas');
+    i = 0;
+    private enable: boolean;
     readonly ctx: CanvasRenderingContext2D;
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
@@ -11,7 +13,10 @@ export class SortAnima {
         }
         this.canvas = canvas;
         this.ctx = canvas.getContext('2d');
-
+        this.ctx.font = "bold 15px '游ゴシック'";
+        this.ctx.textAlign = 'center';
+        this.ctx.shadowBlur  = 2;
+        this.enable = false;
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
         // const element = body.item(0);
@@ -29,8 +34,30 @@ export class SortAnima {
         // element.appendChild(div);
     }
 
+    public drawLoop() {
+        //duration をミリ秒に変換
+        const millDuration = 10000;
+        //duration 秒間描画不可状態にする
+        this.enable = false;    // ??
+        setTimeout(() => {
+            this.enable = true;
+        }, millDuration);
+
+        const loop = () => {
+            this.drawCanvas();
+        }
+        loop();
+    }
+
+    public drawCanvas() {
+        if (this.i == 0) {
+            this.ctx.fillRect(50,50,50,50);
+        } else  {
+            this.ctx.clearRect(50,50,50,50);
+        }
+    }
     // public transtrationGreeting(country: string) {
-    //     const addDiv = document.createElement('div');
+    //     const addDiv = documenåt.createElement('div');
     //     addDiv.innerHTML = `こんにちはを${country}で言うと${this.sub.hello(country)}`;
     //     document.getElementsByTagName('body').item(0).appendChild(addDiv);
     // }
