@@ -16,7 +16,7 @@ export class SortAnima {
         this.ctx.font = "bold 15px '游ゴシック'";
         this.ctx.textAlign = 'center';
         this.ctx.shadowBlur  = 2;
-        this.enable = false;
+        this.enable = true;
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
         // const element = body.item(0);
@@ -35,8 +35,13 @@ export class SortAnima {
     }
 
     public drawLoop() {
+        //描画可能状態か判定
+        if (!this.enable) {
+            console.log('[Roulette.start] 描画不可状態です');
+            return;
+        }
         //duration をミリ秒に変換
-        const millDuration = 10000;
+        const millDuration = 1000;
         //duration 秒間描画不可状態にする
         this.enable = false;    // ??
         setTimeout(() => {
@@ -44,16 +49,25 @@ export class SortAnima {
         }, millDuration);
 
         const loop = () => {
-            this.drawCanvas();
-        }
+            const animation = requestAnimationFrame(loop);
+            this._draw();
+            this.i++;
+
+            if (this.i < 100) {
+                return;
+            }
+            cancelAnimationFrame(animation);
+            }
         loop();
     }
 
-    public drawCanvas() {
-        if (this.i == 0) {
+    public _draw() {
+        if (this.i % 2 == 0) {
+            this.ctx.fillStyle = '#fff';
             this.ctx.fillRect(50,50,50,50);
-        } else  {
-            this.ctx.clearRect(50,50,50,50);
+        } else {
+            this.ctx.fillStyle = '#000';
+            this.ctx.fillRect(50,50,50,50);
         }
     }
     // public transtrationGreeting(country: string) {
