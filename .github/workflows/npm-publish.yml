@@ -17,7 +17,7 @@ jobs:
           node-version: 12
       - name: install packeages
         run: npm install webpack webpack-cli typescript ts-loader
-      - run: npm ci
+      - run: npx webpack
       - name: Deploy website
         uses: peaceiris/actions-gh-pages@v3.6.4
         with:
