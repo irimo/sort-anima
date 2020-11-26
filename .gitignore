@@ -1,2 +1,4 @@
 output/*
+!output/.gitkeep
 node_modules/*
+!node_modules/.gitkee
