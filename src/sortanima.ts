@@ -3,6 +3,7 @@ export class SortAnima {
     i = 0;
     private enable: boolean;
     readonly ctx: CanvasRenderingContext2D;
+    sorting = ["8","2","4","6","5"];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
@@ -40,6 +41,9 @@ export class SortAnima {
             console.log('[Roulette.start] 描画不可状態です');
             return;
         }
+        const array_length = this.sorting.length;
+        var base = 0;
+        var watching = base;
         //duration をミリ秒に変換
         const millDuration = 1000;
         //duration 秒間描画不可状態にする
@@ -52,8 +56,20 @@ export class SortAnima {
             const animation = requestAnimationFrame(loop);
             this._draw();
             this.i++;
+            if (this.sorting[watching] > this.sorting[watching+1]) {
+                var work = this.sorting[watching];
+                this.sorting[watching] = this.sorting[watching+1];
+                this.sorting[watching+1] = work;
+                var sorting_flag = true;
+                this._draw(sorting_flag);
+            }
+            watching++;
+            if (watching == array_length) {
+                base++;
+                watching = base;
+            }
 
-            if (this.i < 100) {
+            if (base == array_length) {
                 return;
             }
             cancelAnimationFrame(animation);
@@ -61,14 +77,16 @@ export class SortAnima {
         loop();
     }
 
-    public _draw() {
-        if (this.i % 2 == 0) {
-            this.ctx.fillStyle = '#fff';
-            this.ctx.fillRect(50,50,50,50);
-        } else {
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(50,50,50,50);
-        }
+    public _draw(sorting_flag:boolean = false) {
+        // if (this.i % 2 == 0) {
+        //     this.ctx.fillStyle = '#fff';
+        //     this.ctx.fillRect(50,50,50,50);
+        // } else {
+        //     this.ctx.fillStyle = '#000';
+        //     this.ctx.fillRect(50,50,50,50);
+        // }
+        this.ctx.fillStyle = '#000';
+        this.ctx.fillText(this.sorting[0],50,50);
     }
     // public transtrationGreeting(country: string) {
     //     const addDiv = documenåt.createElement('div');
