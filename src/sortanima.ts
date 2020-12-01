@@ -1,8 +1,12 @@
 export class SortAnima {
     canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    i = 0;
+    p = 0;
+    base = 0;
+    watching = 0;
     private enable: boolean;
     readonly ctx: CanvasRenderingContext2D;
+    readonly fontsize = 15;
+    sorting = ["8","2","4","6","5"];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
@@ -41,33 +45,55 @@ export class SortAnima {
             return;
         }
         //duration をミリ秒に変換
-        const millDuration = 1000;
+        const duration = 1000;
         //duration 秒間描画不可状態にする
         this.enable = false;    // ??
         setTimeout(() => {
             this.enable = true;
-        }, millDuration);
-
+        }, duration);
+        this._draw();
         const loop = () => {
             const animation = requestAnimationFrame(loop);
-            this._draw();
-            this.i++;
+            if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
+                var work = this.sorting[this.watching];
+                this.sorting[this.watching] = this.sorting[this.watching+1];
+                this.sorting[this.watching+1] = work;
+                this._drawWithSorting(this.watching,this.watching+1);
+                console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
+            }
 
-            if (this.i < 100) {
+            if (this.watching + 1 < this.sorting.length -1) {
+                this.watching++;
+            }  else {
+                this.base++;
+                this.watching = this.base;
+            }
+            if (this.base < this.sorting.length - 1) {
                 return;
             }
             cancelAnimationFrame(animation);
             }
-        loop();
+        setTimeout(() => {
+            loop();
+        }, 2000);
+        this._draw();
+    }
+    public _drawWithSorting(var1 = 0, var2 = 1) {
+        this._draw();
     }
 
-    public _draw() {
-        if (this.i % 2 == 0) {
-            this.ctx.fillStyle = '#fff';
-            this.ctx.fillRect(50,50,50,50);
-        } else {
-            this.ctx.fillStyle = '#000';
-            this.ctx.fillRect(50,50,50,50);
+    public _draw(sorting_flag:boolean = false) {
+        // if (this.i % 2 == 0) {
+        //     this.ctx.fillStyle = '#fff';
+        //     this.ctx.fillRect(50,50,50,50);
+        // } else {
+        //     this.ctx.fillStyle = '#000';
+        //     this.ctx.fillRect(50,50,50,50);
+        // }
+        this.ctx.clearRect(0,0,800,600);
+        this.ctx.fillStyle = '#000';
+        for (var i = 0; i < this.sorting.length; i++) {
+            this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
         }
     }
     // public transtrationGreeting(country: string) {
