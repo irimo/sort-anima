@@ -45,42 +45,41 @@ export class SortAnima {
             return;
         }
         //duration をミリ秒に変換
-        const millDuration = 1000;
+        const duration = 1000;
         //duration 秒間描画不可状態にする
         this.enable = false;    // ??
         setTimeout(() => {
             this.enable = true;
-        }, millDuration);
-
+        }, duration);
+        this._draw();
         const loop = () => {
             const animation = requestAnimationFrame(loop);
-            this._draw();
-            this.p++;
             if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
                 var work = this.sorting[this.watching];
                 this.sorting[this.watching] = this.sorting[this.watching+1];
                 this.sorting[this.watching+1] = work;
-                var sorting_flag = true;
-                // this._draw(sorting_flag);
-                console.log("入れ替わってる〜！？")
+                this._drawWithSorting(this.watching,this.watching+1);
+                console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
             }
-            this.watching++;
-            if (this.watching == this.sorting.length) {
+
+            if (this.watching + 1 < this.sorting.length -1) {
+                this.watching++;
+            }  else {
                 this.base++;
                 this.watching = this.base;
             }
-            console.log(this.p);
-
-            if (this.p > 100) {
+            if (this.base < this.sorting.length - 1) {
                 return;
             }
-
-            // if (base == this.sorting.length) {
-            //     return;
-            // }
             cancelAnimationFrame(animation);
             }
-        loop();
+        setTimeout(() => {
+            loop();
+        }, 2000);
+        this._draw();
+    }
+    public _drawWithSorting(var1 = 0, var2 = 1) {
+        this._draw();
     }
 
     public _draw(sorting_flag:boolean = false) {
