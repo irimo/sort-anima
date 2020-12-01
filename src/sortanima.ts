@@ -1,8 +1,11 @@
 export class SortAnima {
     canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    i = 0;
+    p = 0;
+    base = 0;
+    watching = 0;
     private enable: boolean;
     readonly ctx: CanvasRenderingContext2D;
+    readonly fontsize = 15;
     sorting = ["8","2","4","6","5"];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
@@ -41,9 +44,6 @@ export class SortAnima {
             console.log('[Roulette.start] 描画不可状態です');
             return;
         }
-        const array_length = this.sorting.length;
-        var base = 0;
-        var watching = base;
         //duration をミリ秒に変換
         const millDuration = 1000;
         //duration 秒間描画不可状態にする
@@ -55,23 +55,29 @@ export class SortAnima {
         const loop = () => {
             const animation = requestAnimationFrame(loop);
             this._draw();
-            this.i++;
-            if (this.sorting[watching] > this.sorting[watching+1]) {
-                var work = this.sorting[watching];
-                this.sorting[watching] = this.sorting[watching+1];
-                this.sorting[watching+1] = work;
+            this.p++;
+            if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
+                var work = this.sorting[this.watching];
+                this.sorting[this.watching] = this.sorting[this.watching+1];
+                this.sorting[this.watching+1] = work;
                 var sorting_flag = true;
-                this._draw(sorting_flag);
+                // this._draw(sorting_flag);
+                console.log("入れ替わってる〜！？")
             }
-            watching++;
-            if (watching == array_length) {
-                base++;
-                watching = base;
+            this.watching++;
+            if (this.watching == this.sorting.length) {
+                this.base++;
+                this.watching = this.base;
             }
+            console.log(this.p);
 
-            if (base == array_length) {
+            if (this.p > 100) {
                 return;
             }
+
+            // if (base == this.sorting.length) {
+            //     return;
+            // }
             cancelAnimationFrame(animation);
             }
         loop();
@@ -85,8 +91,11 @@ export class SortAnima {
         //     this.ctx.fillStyle = '#000';
         //     this.ctx.fillRect(50,50,50,50);
         // }
+        this.ctx.clearRect(0,0,800,600);
         this.ctx.fillStyle = '#000';
-        this.ctx.fillText(this.sorting[0],50,50);
+        for (var i = 0; i < this.sorting.length; i++) {
+            this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        }
     }
     // public transtrationGreeting(country: string) {
     //     const addDiv = documenåt.createElement('div');
