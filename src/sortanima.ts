@@ -58,9 +58,9 @@ export class SortAnima {
                 var work = this.sorting[this.watching];
                 this.sorting[this.watching] = this.sorting[this.watching+1];
                 this.sorting[this.watching+1] = work;
-                this._drawWithSorting(this.watching,this.watching+1);
                 console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
             }
+            this._drawWithSorting(this.watching,this.watching+1);
 
             if (this.watching + 1 < this.sorting.length -1) {
                 this.watching++;
@@ -72,11 +72,8 @@ export class SortAnima {
                 return;
             }
             cancelAnimationFrame(animation);
-            }
-        setTimeout(() => {
-            loop();
-        }, 2000);
-        this._draw();
+        }
+        loop();
     }
     public _drawWithSorting(var1 = 0, var2 = 1) {
         this._draw();
