@@ -10,17 +10,24 @@ export class SortAnima {
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
-        if (!canvas.getContext) {
-            console.log('[Roulette.constructor] カンバスが使用できません');
-            // this.enable = false;
-            return;
+        // if (!canvas.getContext) {
+        //     console.log('[Roulette.constructor] カンバスが使用できません');
+        //     // this.enable = false;
+        //     return;
+        // }
+        // this.canvas = canvas;
+        // this.ctx = canvas.getContext('2d');
+        // this.ctx.font = "bold 15px '游ゴシック'";
+        // this.ctx.textAlign = 'center';
+        // this.ctx.shadowBlur  = 2;
+        // this.enable = true;
+        for(var i=0; i<this.sorting.length; i++) {
+            const button:HTMLElement = <HTMLElement>document.createElement('div');
+            button.id = "sorting["+i+"]";
+            button.className="di-sorting-elem";
+            button.textContent = this.sorting[i];
+            document.body.appendChild(button);
         }
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
-        this.ctx.font = "bold 15px '游ゴシック'";
-        this.ctx.textAlign = 'center';
-        this.ctx.shadowBlur  = 2;
-        this.enable = true;
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
         // const element = body.item(0);
@@ -75,8 +82,21 @@ export class SortAnima {
         }
         loop();
     }
+    timer = 0;
     public _drawWithSorting(var1 = 0, var2 = 1) {
-        this._draw();
+
+        this.ctx.clearRect(0,0,800,600);
+        this.ctx.fillStyle = '#000';
+        for (var i = 0; i < this.sorting.length; i++) {
+            if (i == var1) {
+                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+            } else if (i == var2) {
+                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+            } else {
+                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+            }
+        }
+        this.timer++;
     }
 
     public _draw(sorting_flag:boolean = false) {
