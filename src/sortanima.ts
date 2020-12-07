@@ -9,7 +9,7 @@ export class SortAnima {
     // readonly ctx: CanvasRenderingContext2D;
     // readonly fontsize = 15;
     sorting = ["8","2","4","6","5"];
-    sortingelems = [];
+    sortingelems:any = [HTMLElement];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
@@ -26,9 +26,11 @@ export class SortAnima {
         this.enable = true;
         for(var i=0; i<this.sorting.length; i++) {
             const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
-            sortingelem.id = "sorting["+i+"]";
+            sortingelem.id = "sorting"+i;
             sortingelem.className="di-sorting-elem";
             sortingelem.textContent = this.sorting[i];
+            var rect = sortingelem.getBoundingClientRect();
+
             document.body.appendChild(sortingelem);
             this.sortingelems.push(sortingelem);
         }
@@ -91,18 +93,18 @@ export class SortAnima {
     // timer = 0;
     public _drawWithSorting(var1, var2) {
         console.log("_drawWithSorting");
-        gsap.to(this.sortingelems[var1], {
-            duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            x: 800,
-            rotate: 360,
-            repeat: -1,
-        });
-        gsap.to(this.sortingelems[var2], {
-            duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            x: 0,
-            rotate: 360,
-            repeat: -1,
-        });
+        // gsap.to(this.sortingelems[var1], {
+        //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
+        //     x: 800,
+        //     rotate: 360,
+        //     repeat: -1,
+        // });
+        // gsap.to(this.sortingelems[var2], {
+        //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
+        //     x: 0,
+        //     rotate: 360,
+        //     repeat: -1,
+        // });
         // this.ctx.clearRect(0,0,800,600);
         // this.ctx.fillStyle = '#000';
         // for (var i = 0; i < this.sorting.length; i++) {
@@ -118,7 +120,7 @@ export class SortAnima {
         // this.timer++;
     }
 
-    public _draw(sorting_flag:boolean = false) {
+    public _draw() {
         // if (this.i % 2 == 0) {
         //     this.ctx.fillStyle = '#fff';
         //     this.ctx.fillRect(50,50,50,50);
@@ -132,12 +134,14 @@ export class SortAnima {
         //     this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
         // }
         for(var i=0; i<this.sorting.length; i++) {
-            const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
-            sortingelem.id = "sorting["+i+"]";
-            sortingelem.className="di-sorting-elem";
-            sortingelem.textContent = this.sorting[i];
-            document.body.appendChild(sortingelem);
-            this.sortingelems.push(sortingelem);
+            var elem:HTMLElement = this.sortingelems[i];
+            // sortingelem.id = "sorting["+i+"]";
+            // sortingelem.className="di-sorting-elem";
+            // sortingelem.textContent = this.sorting[i];
+            // document.body.appendChild(sortingelem);
+            // this.sortingelems.push(sortingelem);
+            elem.textContent = this.sorting[i];
+            console.log("this.sortingelems[i].textContext"+this.sortingelems[i].textContext);
         }
     }
     // public transtrationGreeting(country: string) {
