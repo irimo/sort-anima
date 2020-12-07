@@ -32,7 +32,7 @@ export class SortAnima {
             var rect = sortingelem.getBoundingClientRect();
 
             document.body.appendChild(sortingelem);
-            this.sortingelems.push(sortingelem);
+            this.sortingelems[i] = sortingelem;
         }
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
@@ -83,6 +83,7 @@ export class SortAnima {
                 this.watching = this.base;
             }
             this._draw();
+
             // if (this.base < this.sorting.length - 1) {
             //     return;
             // }
@@ -93,17 +94,33 @@ export class SortAnima {
     // timer = 0;
     public _drawWithSorting(var1, var2) {
         console.log("_drawWithSorting");
-        // gsap.to(this.sortingelems[var1], {
+        var elem1:HTMLElement = this.sortingelems[var1];
+        var elem2:HTMLElement = this.sortingelems[var2];
+
+        gsap.to(elem1, {
+            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+            top: elem2.style.top,
+            rotate: 360,
+            repeat: 1,
+        });
+        gsap.to(elem2, {
+            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+            top: elem1.style.top,
+            rotate: 360,
+            repeat: 1,
+        });
+
+        // gsap.to(elem1, {
         //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
-        //     x: 800,
+        //     top: elem1.style.top,
         //     rotate: 360,
-        //     repeat: -1,
+        //     repeat: 1,
         // });
-        // gsap.to(this.sortingelems[var2], {
+        // gsap.to(elem2, {
         //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
-        //     x: 0,
+        //     top: elem2.style.top,
         //     rotate: 360,
-        //     repeat: -1,
+        //     repeat: 1,
         // });
         // this.ctx.clearRect(0,0,800,600);
         // this.ctx.fillStyle = '#000';
@@ -133,7 +150,7 @@ export class SortAnima {
         // for (var i = 0; i < this.sorting.length; i++) {
         //     this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
         // }
-        for(var i=0; i<this.sorting.length; i++) {
+        for(var i=0; i < this.sorting.length; i++) {
             var elem:HTMLElement = this.sortingelems[i];
             // sortingelem.id = "sorting["+i+"]";
             // sortingelem.className="di-sorting-elem";
