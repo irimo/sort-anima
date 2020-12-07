@@ -1,12 +1,15 @@
+import gsap from "gsap";
+
 export class SortAnima {
-    canvas = <HTMLCanvasElement>document.getElementById('canvas');
+    // canvas = <HTMLCanvasElement>document.getElementById('canvas');
     p = 0;
     base = 0;
     watching = 0;
     private enable: boolean;
-    readonly ctx: CanvasRenderingContext2D;
-    readonly fontsize = 15;
+    // readonly ctx: CanvasRenderingContext2D;
+    // readonly fontsize = 15;
     sorting = ["8","2","4","6","5"];
+    sortingelems = [];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
@@ -20,13 +23,14 @@ export class SortAnima {
         // this.ctx.font = "bold 15px '游ゴシック'";
         // this.ctx.textAlign = 'center';
         // this.ctx.shadowBlur  = 2;
-        // this.enable = true;
+        this.enable = true;
         for(var i=0; i<this.sorting.length; i++) {
-            const button:HTMLElement = <HTMLElement>document.createElement('div');
-            button.id = "sorting["+i+"]";
-            button.className="di-sorting-elem";
-            button.textContent = this.sorting[i];
-            document.body.appendChild(button);
+            const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
+            sortingelem.id = "sorting["+i+"]";
+            sortingelem.className="di-sorting-elem";
+            sortingelem.textContent = this.sorting[i];
+            document.body.appendChild(sortingelem);
+            this.sortingelems.push(sortingelem);
         }
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
@@ -58,16 +62,17 @@ export class SortAnima {
         setTimeout(() => {
             this.enable = true;
         }, duration);
-        this._draw();
-        const loop = () => {
-            const animation = requestAnimationFrame(loop);
+        // this._draw();
+        while (this.base < this.sorting.length - 1) {
+        // const loop = () => {
+            // const animation = requestAnimationFrame(loop);
             if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
+                console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
+                this._drawWithSorting(this.watching,this.watching+1);
                 var work = this.sorting[this.watching];
                 this.sorting[this.watching] = this.sorting[this.watching+1];
                 this.sorting[this.watching+1] = work;
-                console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
             }
-            this._drawWithSorting(this.watching,this.watching+1);
 
             if (this.watching + 1 < this.sorting.length -1) {
                 this.watching++;
@@ -75,28 +80,42 @@ export class SortAnima {
                 this.base++;
                 this.watching = this.base;
             }
-            if (this.base < this.sorting.length - 1) {
-                return;
-            }
-            cancelAnimationFrame(animation);
+            this._draw();
+            // if (this.base < this.sorting.length - 1) {
+            //     return;
+            // }
+            // cancelAnimationFrame(animation);
+            // loop();
         }
-        loop();
     }
-    timer = 0;
-    public _drawWithSorting(var1 = 0, var2 = 1) {
-
-        this.ctx.clearRect(0,0,800,600);
-        this.ctx.fillStyle = '#000';
-        for (var i = 0; i < this.sorting.length; i++) {
-            if (i == var1) {
-                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
-            } else if (i == var2) {
-                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
-            } else {
-                this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
-            }
-        }
-        this.timer++;
+    // timer = 0;
+    public _drawWithSorting(var1, var2) {
+        console.log("_drawWithSorting");
+        gsap.to(this.sortingelems[var1], {
+            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+            x: 800,
+            rotate: 360,
+            repeat: -1,
+        });
+        gsap.to(this.sortingelems[var2], {
+            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+            x: 0,
+            rotate: 360,
+            repeat: -1,
+        });
+        // this.ctx.clearRect(0,0,800,600);
+        // this.ctx.fillStyle = '#000';
+        // for (var i = 0; i < this.sorting.length; i++) {
+        //     if (i == var1) {
+        //         this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        //     } else if (i == var2) {
+        //         this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        //     } else {
+        //         this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        //     }
+        // }
+        
+        // this.timer++;
     }
 
     public _draw(sorting_flag:boolean = false) {
@@ -107,10 +126,18 @@ export class SortAnima {
         //     this.ctx.fillStyle = '#000';
         //     this.ctx.fillRect(50,50,50,50);
         // }
-        this.ctx.clearRect(0,0,800,600);
-        this.ctx.fillStyle = '#000';
-        for (var i = 0; i < this.sorting.length; i++) {
-            this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        // this.ctx.clearRect(0,0,800,600);
+        // this.ctx.fillStyle = '#000';
+        // for (var i = 0; i < this.sorting.length; i++) {
+        //     this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
+        // }
+        for(var i=0; i<this.sorting.length; i++) {
+            const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
+            sortingelem.id = "sorting["+i+"]";
+            sortingelem.className="di-sorting-elem";
+            sortingelem.textContent = this.sorting[i];
+            document.body.appendChild(sortingelem);
+            this.sortingelems.push(sortingelem);
         }
     }
     // public transtrationGreeting(country: string) {
