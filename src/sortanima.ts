@@ -107,7 +107,7 @@ export class SortAnima {
     // }
     async sort() {
         var length = this.sorting.length - 1;
-        for (var i = (length - 2) / 2; i >= 0; i--) {
+        for (var i = Math.floor((length - 2) / 2); i >= 0; i--) {
             await this.downheap(i, length - 1);
             await this._draw();
         }
@@ -124,14 +124,26 @@ export class SortAnima {
 
     async downheap(k, r) {
         var j, v;
-        v = Object.assign(this.sorting[k]);
-        var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
+        v = Object.assign(" ", this.sorting[k]);
+        // var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
+        console.log("vobj start");
+        console.log("k="+k);
+
+        var vobj:HTMLElement = <HTMLElement>document.createElement('div');
+        // sortingelem.id = "sorting"+i;
+        vobj.className="di-sorting-elem";
+        vobj.textContent = this.sortingelems[k].textContent;
+        vobj.style.top = this.sortingelems[k].style.top;
+        vobj.style.left = this.sortingelems[k].style.left;
+
         document.body.appendChild(vobj);
+        console.log(vobj);
 
         var tl = gsap.timeline({repeat: 1});
         tl.to(vobj, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "200px",
+            y: this.sortingelems[0].style.top,
             // y: elem1_top_diff,
             // left: "50px",
             // rotate: 0,
@@ -148,13 +160,22 @@ export class SortAnima {
                 }
             }
             if (this.greaterThanOrEqual(v, this.sorting[j])) break;
-            this.sorting[k] = this.sorting[j];
+            this.sorting[k] = Object.assign(" ", this.sorting[j]);
             // this.sorting[k] = {name: this.sorting[j].name,
             //     emoji: this.sorting[j].emoji,
             //     color: this.sorting[j].color};
             // await this._drawWithSorting(k,j);   
-            var jobj:HTMLElement = Object.assign(this.sortingelems[j],this.sortingelems[j]);
+            console.log("jobj start");
+            var jobj:HTMLElement = <HTMLElement>document.createElement('div');
+            // sortingelem.id = "sorting"+i;
+            jobj.className="di-sorting-elem";
+            jobj.textContent = this.sortingelems[j].textContent;
+            jobj.style.top = this.sortingelems[j].style.top;
+            jobj.style.left = this.sortingelems[j].style.left;
+    
+            // var jobj:HTMLElement = Object.assign(this.sortingelems[j],this.sortingelems[j]);
             document.body.appendChild(jobj);
+            console.log(jobj);
     
             tl.to(this.sortingelems[k], {
                 duration: 1, // 右側に2秒かけて移動するモーションを指定する
@@ -167,6 +188,7 @@ export class SortAnima {
             tl.to(jobj, {
                 duration: 1, // 右側に2秒かけて移動するモーションを指定する
                 x: this.sortingelems[k].style.top,
+                y: this.sortingelems[k].style.left,
                 // y: elem1_top_diff,
                 // left: "50px",
                 // rotate: 0,
@@ -174,11 +196,12 @@ export class SortAnima {
             }); 
             k = j;
         }
-        this.sorting[k] = v;
-        this.sortingelems[k] = vobj;
+        this.sorting[k] = Object.assign(" ", v);
+        // this.sortingelems[k] = vobj;
         tl.to(vobj, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: this.sortingelems[k].style.top,
+            y: this.sortingelems[k].style.left,
             // y: elem1_top_diff,
             // left: "50px",
             // rotate: 0,
