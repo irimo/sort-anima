@@ -75,21 +75,21 @@ export class SortAnima {
         this.sort();
     }
     async sort() {
-        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         while (this.base < this.sorting.length - 1) {
             await this.changeArrayIfNeeds();
             await this.advanceIteration();
             await this._draw();
-            await sleep(1000);
         }
     }
-    public changeArrayIfNeeds() {
+    async changeArrayIfNeeds() {
+        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
             console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
             var work = this.sorting[this.watching];
             this.sorting[this.watching] = this.sorting[this.watching+1];
             this.sorting[this.watching+1] = work;
-            // this._drawWithSorting(this.watching,this.watching+1);
+            await this._drawWithSorting(this.watching,this.watching+1);
+            await sleep(1000);
         }
     }
     public advanceIteration() {
@@ -105,24 +105,24 @@ export class SortAnima {
         console.log("_drawWithSorting");
         var elem1:HTMLElement = this.sortingelems[var1];
         var elem2:HTMLElement = this.sortingelems[var2];
-        var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
-        tl.to(elem1, {
+        // var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
+        gsap.to(elem1, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
             // top: 100,
             left: "50px",
             rotate: 0,
             repeat: 1,
         });
-        tl.to(elem2, {
+        gsap.to(elem2, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
             // top: 100,
             left: "50px",
             rotate: 0,
             repeat: 1,
         });
-        tl.pause();
-        tl.resume();
-        tl.seek(1.5);
+        // tl.pause();
+        // tl.resume();
+        // tl.seek(1.5);
         // tl.reverse();
         // gsap.to(elem1, {
         //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
