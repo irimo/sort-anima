@@ -139,11 +139,26 @@ export class SortAnima {
             // rotate: 0,
             // repeat: 1,
         });
+        tl.to(elem1, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            x: "0px",
+            y: "0px",
+            // rotate: 0,
+            // repeat: 1,
+        });
+        tl.to(elem2, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            x: "0px",
+            y: "0px",
+            // rotate: 0,
+            // repeat: 1,
+        });
         tl.pause();
         tl.resume();
-        var work = this.sortingelems[var1];
-        this.sortingelems[var1] = this.sortingelems[var2];
-        this.sortingelems[var2] = work;
+        tl = void 0;
+        // var work = this.sortingelems[var1];
+        // this.sortingelems[var1] = this.sortingelems[var2];
+        // this.sortingelems[var2] = work;
         // tl.seek(1.5);
         // tl.reverse();
         // gsap.to(elem1, {
