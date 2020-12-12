@@ -1,5 +1,7 @@
 import gsap from "gsap";
 
+import { characters } from "./characters";
+
 export class SortAnima {
     // canvas = <HTMLCanvasElement>document.getElementById('canvas');
     p = 0;
@@ -8,7 +10,7 @@ export class SortAnima {
     private enable: boolean;
     // readonly ctx: CanvasRenderingContext2D;
     // readonly fontsize = 15;
-    sorting = ["8","2","4","6","5"];
+    sorting = characters;
     sortingelems:any = [HTMLElement];
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
@@ -28,7 +30,8 @@ export class SortAnima {
             const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
             sortingelem.id = "sorting"+i;
             sortingelem.className="di-sorting-elem";
-            sortingelem.textContent = this.sorting[i];
+            sortingelem.textContent = this.sorting[i].name;
+            sortingelem.style.color = this.sorting[i].color;
             var rect = sortingelem.getBoundingClientRect();
 
             document.body.appendChild(sortingelem);
@@ -83,7 +86,7 @@ export class SortAnima {
     }
     async changeArrayIfNeeds() {
         const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-        if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
+        if (this.greaterThan(this.sorting[this.watching], this.sorting[this.watching+1])) {
             console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
             var work = this.sorting[this.watching];
             this.sorting[this.watching] = this.sorting[this.watching+1];
@@ -91,6 +94,12 @@ export class SortAnima {
             await this._drawWithSorting(this.watching,this.watching+1);
             await sleep(4000);
         }
+    }
+    public greaterThan(obj1, obj2) {
+        if (obj1.name.charCodeAt(0) > obj2.name.charCodeAt(0)) {
+            return true;
+        }
+        return false;
     }
     public advanceIteration() {
         if (this.watching + 1 < this.sorting.length -1) {
@@ -209,7 +218,7 @@ export class SortAnima {
             // sortingelem.textContent = this.sorting[i];
             // document.body.appendChild(sortingelem);
             // this.sortingelems.push(sortingelem);
-            elem.textContent = this.sorting[i];
+            elem.textContent = this.sorting[i].name;
             console.log("this.sortingelems[i].textContext"+this.sortingelems[i].textContext);
         }
 
