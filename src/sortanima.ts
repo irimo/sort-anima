@@ -108,15 +108,15 @@ export class SortAnima {
         // var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
         gsap.to(elem1, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            // top: 100,
-            left: "50px",
+            x: "100px",
+            // left: "50px",
             rotate: 0,
             repeat: 1,
         });
         gsap.to(elem2, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            // top: 100,
-            left: "50px",
+            x: "100px",
+            // left: "50px",
             rotate: 0,
             repeat: 1,
         });
