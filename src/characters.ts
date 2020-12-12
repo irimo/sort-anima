@@ -1,4 +1,5 @@
-export var characters:any = [8,1,4,421,241,101,405225,39,110,3943,1914924,393,1,3,104,402,3,4,139,4591];
+export var characters:any = [8,1,4,421,241,
+    101,405225,39,110,3943];
 // characters[0] =     {name: 1, emoji: "🍭", color: "#666600"};
 // characters[1] =     {name: 2, emoji: "🍭", color: "#666600"};
 // characters[2] =     {name: 8, emoji: "🍭", color: "#666600"};

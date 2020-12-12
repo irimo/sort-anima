@@ -124,7 +124,20 @@ export class SortAnima {
 
     async downheap(k, r) {
         var j, v;
-        v = this.sorting[k];
+        v = Object.assign(this.sorting[k]);
+        var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
+        document.body.appendChild(vobj);
+
+        var tl = gsap.timeline({repeat: 1});
+        tl.to(vobj, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: "200px",
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            // repeat: 1,
+        });
+
         // var vi = k;
         while (true) {
             j = 2 * k + 1;
@@ -139,10 +152,40 @@ export class SortAnima {
             // this.sorting[k] = {name: this.sorting[j].name,
             //     emoji: this.sorting[j].emoji,
             //     color: this.sorting[j].color};
-            // await this._drawWithSorting(k,j);    
+            // await this._drawWithSorting(k,j);   
+            var jobj:HTMLElement = Object.assign(this.sortingelems[j],this.sortingelems[j]);
+            document.body.appendChild(jobj);
+    
+            tl.to(this.sortingelems[k], {
+                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                alpha: 0,
+                // y: elem1_top_diff,
+                // left: "50px",
+                // rotate: 0,
+                // repeat: 1,
+            }); 
+            tl.to(jobj, {
+                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                x: this.sortingelems[k].style.top,
+                // y: elem1_top_diff,
+                // left: "50px",
+                // rotate: 0,
+                // repeat: 1,
+            }); 
             k = j;
         }
         this.sorting[k] = v;
+        this.sortingelems[k] = vobj;
+        tl.to(vobj, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: this.sortingelems[k].style.top,
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            // repeat: 1,
+        });
+        tl.pause();
+        tl.resume();
         // await this._drawWithSorting(k,j);    
     }    
     // async changeArrayIfNeeds() {
