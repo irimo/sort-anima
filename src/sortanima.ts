@@ -77,8 +77,8 @@ export class SortAnima {
     async sort() {
         while (this.base < this.sorting.length - 1) {
             await this.changeArrayIfNeeds();
-            await this.advanceIteration();
             await this._draw();
+            await this.advanceIteration();
         }
     }
     async changeArrayIfNeeds() {
@@ -107,13 +107,14 @@ export class SortAnima {
         var elem2:HTMLElement = this.sortingelems[var2];
         // var elem1_x = Object.assign(" ", elem1.style.left);
         // var top_diff_n:number = Number(elem2.style.top) - Number(elem1.style.top);
-        var top_diff:string = String(Math.abs(var2 - var1) * 30);
-        console.log("top diff: " + top_diff);
-        var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
+        var elem1_top_diff:string = String((var2 - var1) * 30);
+        var elem2_top_diff:string = String((var1 - var2) * 30);
+        console.log("top diff: " + elem1_top_diff);
+        var tl = gsap.timeline();
         tl.to(elem1, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "100px",
-            y: top_diff,
+            y: elem1_top_diff,
             // left: "50px",
             // rotate: 0,
             // repeat: 1,
@@ -121,21 +122,21 @@ export class SortAnima {
         tl.to(elem2, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "100px",
-            y: "-" + top_diff,
-            // rotate: 0,
-            // repeat: 1,
-        });
-        tl.to(elem2, {
-            duration: 1, // 右側に2秒かけて移動するモーションを指定する
-            x: "0px",
-            y: "-" + top_diff,
+            y: elem2_top_diff,
             // rotate: 0,
             // repeat: 1,
         });
         tl.to(elem1, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "0px",
-            y: top_diff,
+            y: elem1_top_diff,
+            // rotate: 0,
+            // repeat: 1,
+        });
+        tl.to(elem2, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: "0px",
+            y: elem2_top_diff,
             // rotate: 0,
             // repeat: 1,
         });
@@ -155,7 +156,7 @@ export class SortAnima {
         });
         tl.pause();
         tl.resume();
-        tl = void 0;
+        // tl = void 0;
         // var work = this.sortingelems[var1];
         // this.sortingelems[var1] = this.sortingelems[var2];
         // this.sortingelems[var2] = work;
