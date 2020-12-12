@@ -65,48 +65,56 @@ export class SortAnima {
             this.enable = true;
         }, duration);
         // this._draw();
-        while (this.base < this.sorting.length - 1) {
         // const loop = () => {
             // const animation = requestAnimationFrame(loop);
-            if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
-                console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
-                this._drawWithSorting(this.watching,this.watching+1);
-                var work = this.sorting[this.watching];
-                this.sorting[this.watching] = this.sorting[this.watching+1];
-                this.sorting[this.watching+1] = work;
-            }
-
-            if (this.watching + 1 < this.sorting.length -1) {
-                this.watching++;
-            }  else {
-                this.base++;
-                this.watching = this.base;
-            }
-            this._draw();
-
             // if (this.base < this.sorting.length - 1) {
             //     return;
             // }
             // cancelAnimationFrame(animation);
             // loop();
+        this.sort();
+    }
+    async sort() {
+        while (this.base < this.sorting.length - 1) {
+            this.changeArrayIfNeeds();
+            this.advanceIteration();
+        }
+    }
+    public changeArrayIfNeeds() {
+        if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
+            console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
+            var work = this.sorting[this.watching];
+            this.sorting[this.watching] = this.sorting[this.watching+1];
+            this.sorting[this.watching+1] = work;
+            this._drawWithSorting(this.watching,this.watching+1);
+        }
+    }
+    public advanceIteration() {
+        if (this.watching + 1 < this.sorting.length -1) {
+            this.watching++;
+        }  else {
+            this.base++;
+            this.watching = this.base;
         }
     }
     // timer = 0;
-    public _drawWithSorting(var1, var2) {
+    async _drawWithSorting(var1, var2) {
         console.log("_drawWithSorting");
         var elem1:HTMLElement = this.sortingelems[var1];
         var elem2:HTMLElement = this.sortingelems[var2];
 
-        gsap.to(elem1, {
+        await gsap.to(elem1, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            top: elem2.style.top,
-            rotate: 360,
+            // top: elem2.style.top,
+            left: 50,
+            rotate: 0,
             repeat: 1,
         });
-        gsap.to(elem2, {
+        await gsap.to(elem2, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            top: elem1.style.top,
-            rotate: 360,
+            // top: elem1.style.top,
+            left: 50,
+            rotate: 0,
             repeat: 1,
         });
 
@@ -160,6 +168,8 @@ export class SortAnima {
             elem.textContent = this.sorting[i];
             console.log("this.sortingelems[i].textContext"+this.sortingelems[i].textContext);
         }
+        this._draw();
+
     }
     // public transtrationGreeting(country: string) {
     //     const addDiv = documenåt.createElement('div');
