@@ -89,7 +89,7 @@ export class SortAnima {
             this.sorting[this.watching] = this.sorting[this.watching+1];
             this.sorting[this.watching+1] = work;
             await this._drawWithSorting(this.watching,this.watching+1);
-            await sleep(1000);
+            await sleep(4000);
         }
     }
     public advanceIteration() {
@@ -105,23 +105,45 @@ export class SortAnima {
         console.log("_drawWithSorting");
         var elem1:HTMLElement = this.sortingelems[var1];
         var elem2:HTMLElement = this.sortingelems[var2];
-        // var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
-        gsap.to(elem1, {
-            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+        // var elem1_x = Object.assign(" ", elem1.style.left);
+        // var top_diff_n:number = Number(elem2.style.top) - Number(elem1.style.top);
+        var top_diff:string = String(Math.abs(var2 - var1) * 30);
+        console.log("top diff: " + top_diff);
+        var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
+        tl.to(elem1, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "100px",
+            y: top_diff,
             // left: "50px",
-            rotate: 0,
-            repeat: 1,
+            // rotate: 0,
+            // repeat: 1,
         });
-        gsap.to(elem2, {
-            duration: 2, // 右側に2秒かけて移動するモーションを指定する
+        tl.to(elem2, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "100px",
-            // left: "50px",
-            rotate: 0,
-            repeat: 1,
+            y: "-" + top_diff,
+            // rotate: 0,
+            // repeat: 1,
         });
-        // tl.pause();
-        // tl.resume();
+        tl.to(elem2, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: "0px",
+            y: "-" + top_diff,
+            // rotate: 0,
+            // repeat: 1,
+        });
+        tl.to(elem1, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: "0px",
+            y: top_diff,
+            // rotate: 0,
+            // repeat: 1,
+        });
+        tl.pause();
+        tl.resume();
+        var work = this.sortingelems[var1];
+        this.sortingelems[var1] = this.sortingelems[var2];
+        this.sortingelems[var2] = work;
         // tl.seek(1.5);
         // tl.reverse();
         // gsap.to(elem1, {
