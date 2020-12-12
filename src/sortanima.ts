@@ -75,9 +75,12 @@ export class SortAnima {
         this.sort();
     }
     async sort() {
+        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
         while (this.base < this.sorting.length - 1) {
-            this.changeArrayIfNeeds();
-            this.advanceIteration();
+            await this.changeArrayIfNeeds();
+            await this.advanceIteration();
+            await this._draw();
+            await sleep(1000);
         }
     }
     public changeArrayIfNeeds() {
@@ -86,7 +89,7 @@ export class SortAnima {
             var work = this.sorting[this.watching];
             this.sorting[this.watching] = this.sorting[this.watching+1];
             this.sorting[this.watching+1] = work;
-            this._drawWithSorting(this.watching,this.watching+1);
+            // this._drawWithSorting(this.watching,this.watching+1);
         }
     }
     public advanceIteration() {
@@ -98,26 +101,29 @@ export class SortAnima {
         }
     }
     // timer = 0;
-    async _drawWithSorting(var1, var2) {
+    public _drawWithSorting(var1, var2) {
         console.log("_drawWithSorting");
         var elem1:HTMLElement = this.sortingelems[var1];
         var elem2:HTMLElement = this.sortingelems[var2];
-
-        await gsap.to(elem1, {
+        var tl = gsap.timeline({repeat: 1, repeatDelay: 1});
+        tl.to(elem1, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            // top: elem2.style.top,
-            left: 50,
+            // top: 100,
+            left: "50px",
             rotate: 0,
             repeat: 1,
         });
-        await gsap.to(elem2, {
+        tl.to(elem2, {
             duration: 2, // 右側に2秒かけて移動するモーションを指定する
-            // top: elem1.style.top,
-            left: 50,
+            // top: 100,
+            left: "50px",
             rotate: 0,
             repeat: 1,
         });
-
+        tl.pause();
+        tl.resume();
+        tl.seek(1.5);
+        // tl.reverse();
         // gsap.to(elem1, {
         //     duration: 2, // 右側に2秒かけて移動するモーションを指定する
         //     top: elem1.style.top,
@@ -168,7 +174,6 @@ export class SortAnima {
             elem.textContent = this.sorting[i];
             console.log("this.sortingelems[i].textContext"+this.sortingelems[i].textContext);
         }
-        this._draw();
 
     }
     // public transtrationGreeting(country: string) {
