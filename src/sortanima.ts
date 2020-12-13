@@ -350,15 +350,25 @@ export class SortAnima {
 }
     public greaterThan(obj1, obj2) {
         // if (obj1.name > obj2.name) {
-        if (obj1 > obj2) {
+        if (obj1.charCodeAt(0) > obj2.charCodeAt(0)) {
                 return true;
+        } else if (obj1.charCodeAt(0) == obj2.charCodeAt(0)) {
+            if (obj1.charCodeAt(1) > obj2.charCodeAt(1)) {
+                return true;
+            }
         }
         return false;
     }
     public greaterThanOrEqual(obj1, obj2) {
         // if (obj1.name >= obj2.name) {
-        if (obj1 >= obj2) {
+        if (obj1.charCodeAt(0) == obj2.charCodeAt(0)) {
+            if (obj1.charCodeAt(1) == obj2.charCodeAt(1)) {
+                return true
+            } else if (obj1.charCodeAt(1) > obj2.charCodeAt(1)) {
                 return true;
+            }
+        } else if (obj1.charCodeAt(0) > obj2.charCodeAt(0)) {
+            return true;
         }
         return false;
     }

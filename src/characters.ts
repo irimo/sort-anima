@@ -1,5 +1,15 @@
-export var characters:any = [8,1,4,42,241,
-    101,225,39,110,33];
+export var characters:any = [
+    "やまだいちろう",
+    "やまだじろう",
+    "やまださぶろう",
+    "42",
+    "241",
+    "101",
+    "225",
+    "39",
+    "110",
+    "33",
+];
 // characters[0] =     {name: 1, emoji: "🍭", color: "#666600"};
 // characters[1] =     {name: 2, emoji: "🍭", color: "#666600"};
 // characters[2] =     {name: 8, emoji: "🍭", color: "#666600"};
