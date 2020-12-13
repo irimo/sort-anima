@@ -1,15 +1,25 @@
 import gsap from "gsap";
 
+import { characters } from "./characters";
+import _ from 'lodash'
 export class SortAnima {
     // canvas = <HTMLCanvasElement>document.getElementById('canvas');
-    p = 0;
-    base = 0;
-    watching = 0;
+    // p = 0;
+    // base = 0;
+    // watching = 0;
     private enable: boolean;
     // readonly ctx: CanvasRenderingContext2D;
     // readonly fontsize = 15;
-    sorting = ["8","2","4","6","5"];
+    sorting:any = characters;
     sortingelems:any = [HTMLElement];
+    sorting_len:Number = characters.length;
+    fontsize = 30;
+    jobj:HTMLElement = <HTMLElement>document.createElement('div');
+    vobj:HTMLElement = <HTMLElement>document.createElement('div');
+    vjobjtop = 0;
+    vjobjleft = 200;
+
+    public sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
             //カンバスが使用できるかチェック
@@ -26,14 +36,49 @@ export class SortAnima {
         this.enable = true;
         for(var i=0; i<this.sorting.length; i++) {
             const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
-            sortingelem.id = "sorting"+i;
+            // sortingelem.className = "sorting"+i;
+            // sortingelem.className="di-sorting-elem sorting"+i;
             sortingelem.className="di-sorting-elem";
-            sortingelem.textContent = this.sorting[i];
-            var rect = sortingelem.getBoundingClientRect();
+            sortingelem.style.top = this.fontsize * i + "px";
+            sortingelem.innerHTML = this.sorting[i].toString();
+            // sortingelem.textContent = this.sorting[i].name.toString() + this.sorting[i].emoji ;
+            // sortingelem.style.color = this.sorting[i].color;
+            document.getElementById("numberlist").appendChild(sortingelem);
 
-            document.body.appendChild(sortingelem);
+            // document.body.appendChild(sortingelem);
             this.sortingelems[i] = sortingelem;
         }
+
+        this.vobj.className="di-sorting-elem";
+        // console.log("className");
+        // vobj.innerHTML = Object.assign(" ", this.sortingelems[k].innerHTML);
+        // console.log(this.sortingelems[k]);
+        // var vobjtop = k * this.fontsize;
+        this.vobj.style.top = this.vjobjtop + "px";
+        // console.log("top"+vobj.style.top);
+        this.vobj.style.left = this.vjobjleft + "px";
+        this.vobj.style.position = "absolute";
+        this.vobj.style.visibility = "hidden";
+        // console.log("left"+vobj.style.left);
+        console.log(this.vobj);
+
+        document.getElementById("numberlist").appendChild(this.vobj);
+        this.jobj.className="di-sorting-elem";
+        // console.log("CREclassName");
+        console.log("textContent:"+this.jobj.innerHTML);
+        // var jobjtop = j * this.fontsize;
+        this.jobj.style.top = this.vjobjtop + "px";
+        // console.log("top:"+this.jobj.style.top);
+        this.jobj.style.left = this.vjobjtop + "px";
+        // console.log("left:"+jobj.style.left);
+        this.jobj.style.position = "absolute";
+        this.jobj.style.visibility = "hidden";
+
+        console.log("jobj move start");
+
+        // var jobj:HTMLElement = Object.assign(this.sortingelems[j],this.sortingelems[j]);
+        document.getElementById("numberlist").appendChild(this.jobj);
+
         // this.sub = new Sub();
         // const body = document.getElementsByTagName('body');
         // const element = body.item(0);
@@ -74,43 +119,284 @@ export class SortAnima {
             // loop();
         this.sort();
     }
+    // void sort() {					// ヒープソート(昇順)
+    //     for (int i = (length - 2) / 2; i >= 0; i--) {
+    //         downheap(i, length - 1);
+    //     }
+    //     for (int i = length - 1; i > 0; i--) {
+    //         swap(0, i);
+    //         downheap(0, i - 1);
+    // }
+    // }
+    
+    // void downheap(int k, int r) {
+    //     int j, v;
+    //     v = a[k];
+    //     while (true) {
+    //         j = 2 * k + 1;
+    //         if (j > r) break;
+    //         if (j != r) {
+    //         if (a[j + 1] > a[j]) {
+    //             j = j + 1;
+    //         }
+    //         }
+    //         if (v >= a[j]) break;
+    //         a[k] = a[j];
+    //         k = j;
+    //     }
+    //     a[k] = v;
+    // }
     async sort() {
-        while (this.base < this.sorting.length - 1) {
-            await this.changeArrayIfNeeds();
-            await this._draw();
-            await this.advanceIteration();
+        var length = this.sorting.length - 1;
+        for (var i = Math.floor((length - 2) / 2); i >= 0; i--) {
+            await this.downheap(i, length - 1);
+            // await this._draw();
         }
-    }
-    async changeArrayIfNeeds() {
-        const sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
-        if (this.sorting[this.watching].charCodeAt(0) > this.sorting[this.watching+1].charCodeAt(0)) {
-            console.log("入れ替わってる〜！？"+this.sorting[this.watching]+"<->"+this.sorting[this.watching+1]);
-            var work = this.sorting[this.watching];
-            this.sorting[this.watching] = this.sorting[this.watching+1];
-            this.sorting[this.watching+1] = work;
-            await this._drawWithSorting(this.watching,this.watching+1);
-            await sleep(4000);
+        for (var i = length - 1; i > 0; i--) {
+            await this.swap(0, i);
+            await this.downheap(0, i - 1);
         }
+        // while (this.base < this.sorting.length - 1) {
+            // await this.changeArrayIfNeeds();
+            // await this._draw();
+            // await this.advanceIteration();
+        // }
     }
-    public advanceIteration() {
-        if (this.watching + 1 < this.sorting.length -1) {
-            this.watching++;
-        }  else {
-            this.base++;
-            this.watching = this.base;
+
+    async downheap(k, r) {
+        var j, v;
+        v = _.cloneDeep(this.sorting[k]);
+        var vi = k;
+        var sleep_delay = 0;
+
+        // var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
+        console.log("vobj start");
+        console.log("k="+k);
+        this.vobj.innerHTML = _.cloneDeep(this.sorting[k]) + ":k-"+ k + ":vobj";
+
+        // var vobj:HTMLElement = _.cloneDeep(this.sortingelems[k]);
+        // // sortingelem.id = "sorting"+i;
+        // console.log("create element");
+        this.vobj.style.visibility = "visible";
+
+        var tl = gsap.timeline({repeat: 1});
+        tl.to(this.vobj, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            alpha: 1,
+            x: "-" + this.vjobjleft + "px",
+            y: (this.vjobjtop + k * this.fontsize) + "px",
+            // y: this.sortingelems[0].style.top,
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            // repeat: 1,
+        });
+        // var sortingelems_0:HTMLElement = this.sortingelems[0];
+        // var vobjy = 0 * this.fontsize - vobjtop;
+        // console.log("vobjy="+vobjy);
+        // console.log(sortingelems_0.style.top);
+        // console.log(Number(vobj.style.top));
+
+        tl.to(this.vobj, {
+            duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            x: "0",
+            y: "0",
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            // repeat: 1,
+        });
+        sleep_delay += 1000;
+        // vobj.style.top = "200px";
+        // // console.log("top"+vobj.style.top);
+        // vobj.style.left = this.sortingelems[0].style.top;
+
+
+        // var vi = k;
+        while (true) {
+            j = 2 * k + 1;
+            if (j > r) break;
+            if (j != r) {
+                if (this.greaterThan(this.sorting[j + 1], this.sorting[j])) {
+                    j = j + 1;
+                }
+            }
+            if (this.greaterThanOrEqual(v, this.sorting[j])) break;
+            this.sorting[k] = _.cloneDeep(this.sorting[j]);
+            // this.sorting[k] = {name: this.sorting[j].name,
+            //     emoji: this.sorting[j].emoji,
+            //     color: this.sorting[j].color};
+            // await this._drawWithSorting(k,j);   
+            console.log("jobj start");
+            this.jobj.style.visibility = "visible";
+            this.jobj.innerHTML = _.cloneDeep(this.sorting[j]) + ":" + j + "-> " + k + "";
+
+            // var jobj:HTMLElement = _.cloneDeep(this.sortingelems[j]);
+            // console.log(jobj);
+            // console.log("CREATE ELEMENT");
+            // // sortingelem.id = "sorting"+i;
+
+            console.log(this.jobj);
+    
+            console.log("sortingelems=");
+            console.log(this.sortingelems[k]);
+            // tl.to(this.sortingelems[k], {
+            //     duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            //     alpha: 0,
+            //     // y: elem1_top_diff,
+            //     // left: "50px",
+            //     // rotate: 0,
+            //     // repeat: 1,
+            // }); 
+            // var jobjx = 0;
+
+            // console.log("jobjx="+jobjx);
+            // var jobjy = 0;
+            // console.log("jobjy="+jobjy);
+            tl.to(this.jobj, {
+                duration: 0, // 右側に2秒かけて移動するモーションを指定する
+                alpha: 1,
+                x: this.vjobjleft + "px",
+                y: (this.vjobjtop + j * this.fontsize) + "px",
+            //     // y: elem1_top_diff,
+            //     // left: "50px",
+            //     // rotate: 0,
+            //     // repeat: 1,
+            }); 
+            tl.to(this.jobj, {
+                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                x: "0",
+                y: (k * this.fontsize - this.vjobjtop - j * this.fontsize) + "px",
+                // y: elem1_top_diff,
+                // left: "50px",
+                // rotate: 0,
+                // repeat: 1,
+            }); 
+            tl.to(this.sortingelems[k], {
+                duration: 0.5, // 右側に2秒かけて移動するモーションを指定する
+                alpha: 0,
+            //     // x: jobjx,
+            //     // y: jobjy,
+            //     // y: elem1_top_diff,
+            //     // left: "50px",
+            //     // rotate: 0,
+            //     // repeat: 1,
+            }); 
+            sleep_delay += 500;
+            // tl.to(jobj, {
+            //     duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            //     alpha: 0,
+            // //     // y: elem1_top_diff,
+            // //     // left: "50px",
+            // //     // rotate: 0,
+            // //     // repeat: 1,
+            // }); 
+            sleep_delay += 1000;
+            k = j;
         }
+        console.log("v=");
+        console.log(v);
+        this.sorting[k] = _.cloneDeep(v);
+        // this.sortingelems[k] = vobj;
+        if (vi != k) {
+            // var vobjy = k * this.fontsize - this.vjobjtop;
+            tl.to(this.vobj, {
+                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                x: -this.vjobjtop + "px",
+                y: (k * this.fontsize - this.vjobjtop) + "px",
+                // y: elem1_top_diff,
+                // left: "50px",
+                // rotate: 0,
+                // repeat: 1,
+            });
+            sleep_delay += 1000;
+        }
+        // tl.to(this.sortingelems[k], {
+        //     duration: 0, // 右側に2秒かけて移動するモーションを指定する
+        //     alpha: 1,
+        //     // y: elem1_top_diff,
+        //     // left: "50px",
+        //     // rotate: 0,
+        //     // repeat: 1,
+        // }); 
+        tl.to(this.vobj, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            alpha: 0,
+        //     // y: elem1_top_diff,
+        //     // left: "50px",
+        //     // rotate: 0,
+        //     // repeat: 1,
+        }); 
+        tl.pause();
+        tl.resume();
+        // await this._drawWithSorting(k,j);  
+        await this.sleep(sleep_delay);  
+        // await function() {jobj = void 0,vobj = void 0}
+        await this._draw();
+        // await tl.clear();
+    }    
+    // async changeArrayIfNeeds() {
+    //     if (this.greaterThan(this.sorting[this.watching], this.sorting[this.watching+1])) {
+    //         this.swap(this.watching, this.watching+1)
+    //         await this._drawWithSorting(this.watching,this.watching+1);
+    //         await sleep(4000);
+    //     }
+    // }
+    async swap(var1, var2) {
+        var work = _.cloneDeep(this.sorting[var1]);
+        this.sorting[var1] = _.cloneDeep(this.sorting[var2]);
+        this.sorting[var2] = work;
+        await this._drawWithSorting(var1,var2);
+}
+    public greaterThan(obj1, obj2) {
+        // if (obj1.name > obj2.name) {
+        if (obj1 > obj2) {
+                return true;
+        }
+        return false;
     }
+    public greaterThanOrEqual(obj1, obj2) {
+        // if (obj1.name >= obj2.name) {
+        if (obj1 >= obj2) {
+                return true;
+        }
+        return false;
+    }
+    // public advanceIteration() {
+    //     if (this.watching + 1 < this.sorting.length -1) {
+    //         this.watching++;
+    //     }  else {
+    //         this.base++;
+    //         this.watching = this.base;
+    //     }
+    // }
     // timer = 0;
-    public _drawWithSorting(var1, var2) {
+    async _drawWithSorting(var1, var2) {
         console.log("_drawWithSorting");
         var elem1:HTMLElement = this.sortingelems[var1];
         var elem2:HTMLElement = this.sortingelems[var2];
         // var elem1_x = Object.assign(" ", elem1.style.left);
         // var top_diff_n:number = Number(elem2.style.top) - Number(elem1.style.top);
-        var elem1_top_diff:string = String((var2 - var1) * 30);
-        var elem2_top_diff:string = String((var1 - var2) * 30);
+        var elem1_top_diff:string = String((var2 - var1) * this.fontsize);
+        var elem2_top_diff:string = String((var1 - var2) * this.fontsize);
         console.log("top diff: " + elem1_top_diff);
-        var tl = gsap.timeline();
+        var tl = gsap.timeline({repeat: 1});
+        tl.to(elem1, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            // x: "100px",
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            alpha: 1,
+        });
+        tl.to(elem2, {
+            duration: 0, // 右側に2秒かけて移動するモーションを指定する
+            // x: "100px",
+            // y: elem1_top_diff,
+            // left: "50px",
+            // rotate: 0,
+            alpha: 1,
+        });
         tl.to(elem1, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "100px",
@@ -156,6 +442,8 @@ export class SortAnima {
         });
         tl.pause();
         tl.resume();
+        await this.sleep(4000);
+        // await this._draw();
         // tl = void 0;
         // var work = this.sortingelems[var1];
         // this.sortingelems[var1] = this.sortingelems[var2];
@@ -202,15 +490,18 @@ export class SortAnima {
         // for (var i = 0; i < this.sorting.length; i++) {
         //     this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
         // }
-        for(var i=0; i < this.sorting.length; i++) {
+        for(var i=0; i < this.sorting_len; i++) {
+            console.log("@draw i="+i);
             var elem:HTMLElement = this.sortingelems[i];
             // sortingelem.id = "sorting["+i+"]";
             // sortingelem.className="di-sorting-elem";
             // sortingelem.textContent = this.sorting[i];
             // document.body.appendChild(sortingelem);
             // this.sortingelems.push(sortingelem);
-            elem.textContent = this.sorting[i];
-            console.log("this.sortingelems[i].textContext"+this.sortingelems[i].textContext);
+            if (!this.sorting[i])return;
+            elem.innerHTML = this.sorting[i].toString() + ":i-" + i;
+            // elem.textContent = this.sorting[i].name.toStrig() + this.sorting[i].emoji;
+            console.log("this.sortingelems[i].textContext"+this.sortingelems[i].innerHTML);
         }
 
     }
