@@ -13,6 +13,7 @@ export class SortAnima {
     sorting:any = characters;
     sortingelems:any = [HTMLElement];
     sorting_len:Number = characters.length;
+    fontsize = 30;
     public sleep = msec => new Promise(resolve => setTimeout(resolve, msec));
     // const roulette = new Roulette(canvas, 500);
     constructor(canvas: HTMLCanvasElement) {
@@ -30,13 +31,16 @@ export class SortAnima {
         this.enable = true;
         for(var i=0; i<this.sorting.length; i++) {
             const sortingelem:HTMLElement = <HTMLElement>document.createElement('div');
-            sortingelem.id = "sorting"+i;
+            // sortingelem.className = "sorting"+i;
+            // sortingelem.className="di-sorting-elem sorting"+i;
             sortingelem.className="di-sorting-elem";
+            sortingelem.style.top = this.fontsize * i + "px";
             sortingelem.innerHTML = this.sorting[i].toString();
             // sortingelem.textContent = this.sorting[i].name.toString() + this.sorting[i].emoji ;
             // sortingelem.style.color = this.sorting[i].color;
+            document.getElementById("numberlist").appendChild(sortingelem);
 
-            document.body.appendChild(sortingelem);
+            // document.body.appendChild(sortingelem);
             this.sortingelems[i] = sortingelem;
         }
         // this.sub = new Sub();
@@ -139,14 +143,15 @@ export class SortAnima {
         vobj.innerHTML = _.cloneDeep(this.sortingelems[k].textContent);
         // vobj.innerHTML = Object.assign(" ", this.sortingelems[k].innerHTML);
         console.log(this.sortingelems[k]);
-        vobj.style.top = _.cloneDeep(this.sortingelems[k].style.top);
+        var vobjtop = (k * this.fontsize).toString() + "px";
+        vobj.style.top = vobjtop;
         // console.log("top"+vobj.style.top);
-        vobj.style.left = _.cloneDeep(this.sortingelems[k].style.left);
+        vobj.style.left = "0";
         vobj.style.position = "absolute";
         // console.log("left"+vobj.style.left);
         console.log(vobj);
 
-        document.body.appendChild(vobj);
+        document.getElementById("numberlist").appendChild(vobj);
 
         var tl = gsap.timeline({repeat: 1});
         tl.to(vobj, {
@@ -159,16 +164,25 @@ export class SortAnima {
             // rotate: 0,
             // repeat: 1,
         });
-        var vobjy = Number(vobj.style.top) - this.sortingelems[0].style.top;
+        // var sortingelems_0:HTMLElement = this.sortingelems[0];
+        var vobjy = "-" + vobjtop;
+        console.log("vobjy="+vobjy);
+        // console.log(sortingelems_0.style.top);
+        // console.log(Number(vobj.style.top));
+
         tl.to(vobj, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: "200px",
-            y: vobjy,
+            y: vobjy.toString(),
             // y: elem1_top_diff,
             // left: "50px",
             // rotate: 0,
             // repeat: 1,
         });
+        // vobj.style.top = "200px";
+        // // console.log("top"+vobj.style.top);
+        // vobj.style.left = this.sortingelems[0].style.top;
+
 
         // var vi = k;
         while (true) {
@@ -204,7 +218,8 @@ export class SortAnima {
             console.log("jobj move start");
     
             // var jobj:HTMLElement = Object.assign(this.sortingelems[j],this.sortingelems[j]);
-            document.body.appendChild(jobj);
+            document.getElementById("numberlist").appendChild(jobj);
+
             console.log(jobj);
     
             console.log("sortingelems=");
@@ -247,8 +262,8 @@ export class SortAnima {
         console.log(v);
         this.sorting[k] = _.cloneDeep(v);
         // this.sortingelems[k] = vobj;
-        var vobjx = Number(vobj.style.top) - this.sortingelems[k].style.top;
-        vobjy = Number(vobj.style.left) - this.sortingelems[k].style.left;
+        var vobjx = (Number(vobj.style.top) - this.sortingelems[k].style.top).toString();
+        vobjy = (Number(vobj.style.left) - this.sortingelems[k].style.left).toString();
         tl.to(vobj, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
             x: vobjx,
