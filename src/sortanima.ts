@@ -130,6 +130,9 @@ export class SortAnima {
     async downheap(k, r) {
         var j, v;
         v = _.cloneDeep(this.sorting[k]);
+        var vi = k;
+        var sleep_delay = 0;
+
         // var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
         console.log("vobj start");
         console.log("k="+k);
@@ -140,11 +143,12 @@ export class SortAnima {
         // console.log("create element");
         vobj.className="di-sorting-elem";
         // console.log("className");
-        vobj.innerHTML = _.cloneDeep(this.sortingelems[k].textContent);
+        vobj.innerHTML = _.cloneDeep(this.sortingelems[k].textContent) + ":k-"+ k;
         // vobj.innerHTML = Object.assign(" ", this.sortingelems[k].innerHTML);
         console.log(this.sortingelems[k]);
-        var vobjtop = (k * this.fontsize).toString() + "px";
-        vobj.style.top = vobjtop;
+        var vobjtop = k * this.fontsize;
+        var vobj_posx = 200;
+        vobj.style.top = vobjtop.toString() + "px";
         // console.log("top"+vobj.style.top);
         vobj.style.left = "0";
         vobj.style.position = "absolute";
@@ -165,20 +169,21 @@ export class SortAnima {
             // repeat: 1,
         });
         // var sortingelems_0:HTMLElement = this.sortingelems[0];
-        var vobjy = "-" + vobjtop;
-        console.log("vobjy="+vobjy);
+        var vobjy = 0 * this.fontsize - vobjtop;
+        // console.log("vobjy="+vobjy);
         // console.log(sortingelems_0.style.top);
         // console.log(Number(vobj.style.top));
 
         tl.to(vobj, {
             duration: 1, // 右側に2秒かけて移動するモーションを指定する
-            x: "200px",
-            y: vobjy.toString(),
+            x: vobj_posx+"px",
+            y: vobjy + "px",
             // y: elem1_top_diff,
             // left: "50px",
             // rotate: 0,
             // repeat: 1,
         });
+        sleep_delay += 1000;
         // vobj.style.top = "200px";
         // // console.log("top"+vobj.style.top);
         // vobj.style.left = this.sortingelems[0].style.top;
@@ -207,12 +212,13 @@ export class SortAnima {
             // // sortingelem.id = "sorting"+i;
             jobj.className="di-sorting-elem";
             // console.log("CREclassName");
-            jobj.innerHTML = _.cloneDeep(this.sortingelems[j].textContent);
+            jobj.innerHTML = _.cloneDeep(this.sortingelems[j].textContent) + ":j-" + j;
             console.log("textContent:"+jobj.innerHTML);
-            jobj.style.top = _.cloneDeep(this.sortingelems[j].style.top);
+            var jobjtop = j * this.fontsize;
+            jobj.style.top = jobjtop + "px";
             console.log("top:"+jobj.style.top);
-            jobj.style.left = _.cloneDeep(this.sortingelems[j].style.left);
-            console.log("left:"+jobj.style.left);
+            jobj.style.left = "0";
+            // console.log("left:"+jobj.style.left);
             jobj.style.position = "absolute";
 
             console.log("jobj move start");
@@ -224,86 +230,89 @@ export class SortAnima {
     
             console.log("sortingelems=");
             console.log(this.sortingelems[k]);
-            tl.to(this.sortingelems[k], {
-                duration: 1, // 右側に2秒かけて移動するモーションを指定する
-                alpha: 0,
-                // y: elem1_top_diff,
-                // left: "50px",
-                // rotate: 0,
-                // repeat: 1,
-            }); 
-            var jobjx:any = Number(jobj.style.top) - this.sortingelems[k].style.top;
+            // tl.to(this.sortingelems[k], {
+            //     duration: 1, // 右側に2秒かけて移動するモーションを指定する
+            //     alpha: 0,
+            //     // y: elem1_top_diff,
+            //     // left: "50px",
+            //     // rotate: 0,
+            //     // repeat: 1,
+            // }); 
+            var jobjx = 0;
 
-            console.log("jobjx="+jobjx);
-            var jobjy:any = Number(jobj.style.left) - this.sortingelems[k].style.left;
-            console.log("jobjy="+jobjy);
+            // console.log("jobjx="+jobjx);
+            // var jobjy = 0;
+            // console.log("jobjy="+jobjy);
             tl.to(jobj, {
-                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                duration: 0, // 右側に2秒かけて移動するモーションを指定する
                 alpha: 1,
-                // x: jobjx,
-                // y: jobjy,
-                // y: elem1_top_diff,
-                // left: "50px",
-                // rotate: 0,
-                // repeat: 1,
+            //     // x: jobjx,
+            //     // y: jobjy,
+            //     // y: elem1_top_diff,
+            //     // left: "50px",
+            //     // rotate: 0,
+            //     // repeat: 1,
             }); 
             tl.to(jobj, {
                 duration: 1, // 右側に2秒かけて移動するモーションを指定する
-                x: jobjx,
-                y: jobjy,
+                x: "0",
+                y: (jobjtop - k * this.fontsize) + "px",
                 // y: elem1_top_diff,
                 // left: "50px",
                 // rotate: 0,
                 // repeat: 1,
             }); 
+            sleep_delay += 1000;
             k = j;
         }
         console.log("v=");
         console.log(v);
         this.sorting[k] = _.cloneDeep(v);
         // this.sortingelems[k] = vobj;
-        var vobjx = (Number(vobj.style.top) - this.sortingelems[k].style.top).toString();
-        vobjy = (Number(vobj.style.left) - this.sortingelems[k].style.left).toString();
-        tl.to(vobj, {
-            duration: 1, // 右側に2秒かけて移動するモーションを指定する
-            x: vobjx,
-            y: vobjy,
-            // y: elem1_top_diff,
-            // left: "50px",
-            // rotate: 0,
-            // repeat: 1,
-        });
-
-        tl.to(this.sortingelems[k], {
-            duration: 0, // 右側に2秒かけて移動するモーションを指定する
-            alpha: 1,
-            // y: elem1_top_diff,
-            // left: "50px",
-            // rotate: 0,
-            // repeat: 1,
-        }); 
+        if (vi != k) {
+            var vobjy = vobjtop - k * this.fontsize;
+            tl.to(vobj, {
+                duration: 1, // 右側に2秒かけて移動するモーションを指定する
+                x: "0px",
+                y: vobjy + "px",
+                // y: elem1_top_diff,
+                // left: "50px",
+                // rotate: 0,
+                // repeat: 1,
+            });
+            sleep_delay += 1000;
+        }
+        // tl.to(this.sortingelems[k], {
+        //     duration: 0, // 右側に2秒かけて移動するモーションを指定する
+        //     alpha: 1,
+        //     // y: elem1_top_diff,
+        //     // left: "50px",
+        //     // rotate: 0,
+        //     // repeat: 1,
+        // }); 
         tl.to(vobj, {
             duration: 0, // 右側に2秒かけて移動するモーションを指定する
             alpha: 0,
-            // y: elem1_top_diff,
-            // left: "50px",
-            // rotate: 0,
-            // repeat: 1,
+        //     // y: elem1_top_diff,
+        //     // left: "50px",
+        //     // rotate: 0,
+        //     // repeat: 1,
         }); 
         tl.to(jobj, {
             duration: 0, // 右側に2秒かけて移動するモーションを指定する
             alpha: 0,
-            // y: elem1_top_diff,
-            // left: "50px",
-            // rotate: 0,
-            // repeat: 1,
+        //     // y: elem1_top_diff,
+        //     // left: "50px",
+        //     // rotate: 0,
+        //     // repeat: 1,
         }); 
         tl.pause();
         tl.resume();
-        jobj = void 0;
-        vobj = void 0;
         // await this._drawWithSorting(k,j);  
-        await this.sleep(4000);  
+        await this.sleep(sleep_delay);  
+        // await function() {jobj = void 0,vobj = void 0}
+        await this._draw();
+        // await tl.clear();
     }    
     // async changeArrayIfNeeds() {
     //     if (this.greaterThan(this.sorting[this.watching], this.sorting[this.watching+1])) {
@@ -453,8 +462,8 @@ export class SortAnima {
             // document.body.appendChild(sortingelem);
             // this.sortingelems.push(sortingelem);
             if (!this.sorting[i])return;
-            elem.innerHTML = this.sorting[i].toString();
-            // elem.textContent = this.sorting[i].name.toString() + this.sorting[i].emoji;
+            elem.innerHTML = this.sorting[i].toString() + ":i-" + i;
+            // elem.textContent = this.sorting[i].name.toStrig() + this.sorting[i].emoji;
             console.log("this.sortingelems[i].textContext"+this.sortingelems[i].innerHTML);
         }
 
