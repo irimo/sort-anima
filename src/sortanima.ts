@@ -2,6 +2,7 @@ import gsap from "gsap";
 
 import { characters } from "./characters";
 import _ from 'lodash'
+import { isFunctionExpression } from "typescript";
 export class SortAnima {
     // canvas = <HTMLCanvasElement>document.getElementById('canvas');
     // p = 0;
@@ -12,7 +13,7 @@ export class SortAnima {
     // readonly fontsize = 15;
     sorting:any = characters;
     sortingelems:any = [HTMLElement];
-    sorting_len:Number = characters.length;
+    // sorting_len:Number = this.sorting.length;
     fontsize = 30;
     jobj:HTMLElement = <HTMLElement>document.createElement('div');
     vobj:HTMLElement = <HTMLElement>document.createElement('div');
@@ -147,7 +148,8 @@ export class SortAnima {
     //     a[k] = v;
     // }
     async sort() {
-        var length = this.sorting.length - 1;
+        var length = this.sorting.length;
+        // var length = this.sorting.length - 1;
         for (var i = Math.floor((length - 2) / 2); i >= 0; i--) {
             await this.downheap(i, length - 1);
             // await this._draw();
@@ -172,7 +174,7 @@ export class SortAnima {
         // var vobj:HTMLElement = Object.assign(this.sortingelems[k],this.sortingelems[k]);
         console.log("vobj start");
         console.log("k="+k);
-        this.vobj.innerHTML = _.cloneDeep(this.sorting[k]) + ":k-"+ k + ":vobj";
+        this.vobj.innerHTML = _.cloneDeep(this.sorting[k]);
 
         // var vobj:HTMLElement = _.cloneDeep(this.sortingelems[k]);
         // // sortingelem.id = "sorting"+i;
@@ -229,7 +231,7 @@ export class SortAnima {
             // await this._drawWithSorting(k,j);   
             console.log("jobj start");
             this.jobj.style.visibility = "visible";
-            this.jobj.innerHTML = _.cloneDeep(this.sorting[j]) + ":" + j + "-> " + k + "";
+            this.jobj.innerHTML = _.cloneDeep(this.sorting[j]);
 
             // var jobj:HTMLElement = _.cloneDeep(this.sortingelems[j]);
             // console.log(jobj);
@@ -350,15 +352,45 @@ export class SortAnima {
 }
     public greaterThan(obj1, obj2) {
         // if (obj1.name > obj2.name) {
-        if (obj1 > obj2) {
+        if (obj1.charCodeAt(0) > obj2.charCodeAt(0)) {
                 return true;
+        } else if (obj1.charCodeAt(0) == obj2.charCodeAt(0)) {
+            if (obj1.charCodeAt(1) > obj2.charCodeAt(1)) {
+                return true;
+            } else if (obj1.charCodeAt(2) == obj2.charCodeAt(2)) {
+                if (obj1.charCodeAt(3) > obj2.charCodeAt(3)) {
+                    return true;
+                } else if (obj1.charCodeAt(3) == obj2.charCodeAt(3)) {
+                    if (obj1.charCodeAt(4) > obj2.charCodeAt(4)) {
+                        return true;
+                    }
+                }
+            }
         }
         return false;
     }
     public greaterThanOrEqual(obj1, obj2) {
         // if (obj1.name >= obj2.name) {
-        if (obj1 >= obj2) {
+        if (obj1.charCodeAt(0) == obj2.charCodeAt(0)) {
+            if (obj1.charCodeAt(1) == obj2.charCodeAt(1)) {
+                if (obj1.charCodeAt(2) == obj2.charCodeAt(2)) {
+                    if (obj1.charCodeAt(3) == obj2.charCodeAt(3)) {
+                        if (obj1.charCodeAt(4) == obj2.charCodeAt(4)) {
+                            return true;
+                        } else if (obj1.charCodeAt(4) > obj2.charCodeAt(4)) {
+                            return true;
+                        }
+                    } else if (obj1.charCodeAt(3) > obj2.charCodeAt(3)) {
+                        return true;
+                    }
+                } else if (obj1.charCodeAt(2) > obj2.charCodeAt(2)) {
+                    return true
+                }
+            } else if (obj1.charCodeAt(1) > obj2.charCodeAt(1)) {
                 return true;
+            }
+        } else if (obj1.charCodeAt(0) > obj2.charCodeAt(0)) {
+            return true;
         }
         return false;
     }
@@ -490,7 +522,7 @@ export class SortAnima {
         // for (var i = 0; i < this.sorting.length; i++) {
         //     this.ctx.fillText(this.sorting[i],50,50+this.fontsize*i);
         // }
-        for(var i=0; i < this.sorting_len; i++) {
+        for(var i=0; i < this.sorting.length; i++) {
             console.log("@draw i="+i);
             var elem:HTMLElement = this.sortingelems[i];
             // sortingelem.id = "sorting["+i+"]";
@@ -499,7 +531,7 @@ export class SortAnima {
             // document.body.appendChild(sortingelem);
             // this.sortingelems.push(sortingelem);
             if (!this.sorting[i])return;
-            elem.innerHTML = this.sorting[i].toString() + ":i-" + i;
+            elem.innerHTML = this.sorting[i].toString();
             // elem.textContent = this.sorting[i].name.toStrig() + this.sorting[i].emoji;
             console.log("this.sortingelems[i].textContext"+this.sortingelems[i].innerHTML);
         }
